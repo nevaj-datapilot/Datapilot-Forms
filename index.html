@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Timesheet</title>
+<style>
+  :root {
+    --brand: #1F4E79;
+    --brand-light: #2E75B6;
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --border: #d0d7de;
+    --muted: #6b7280;
+    --green: #16a34a;
+    --amber: #d97706;
+    --red: #dc2626;
+    --sub-bg: #f0f6fc;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: #111;
+    padding: 0 0 120px 0;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
+  header.top {
+    background: var(--brand);
+    color: white;
+    padding: 32px 24px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+  }
+  header.top h1 { margin: 0 0 8px 0; font-size: 28px; }
+  header.top p { margin: 0; font-size: 14px; opacity: 0.9; line-height: 1.5; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card h2 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    color: var(--brand);
+    border-bottom: 2px solid var(--brand);
+    padding-bottom: 8px;
+  }
+  label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #333; }
+  input[type="email"], input[type="date"], input[type="number"], textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  input[type="number"] { text-align: center; padding: 6px 4px; }
+  input:focus, textarea:focus { outline: 2px solid var(--brand-light); outline-offset: -1px; }
+
+  .row-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  table.timesheet {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  table.timesheet th {
+    background: var(--brand);
+    color: white;
+    padding: 8px 6px;
+    font-weight: 600;
+    text-align: center;
+    font-size: 12px;
+  }
+  table.timesheet th.first { text-align: left; padding-left: 12px; min-width: 240px; }
+  table.timesheet td {
+    border: 1px solid var(--border);
+    padding: 4px;
+    background: white;
+  }
+  table.timesheet td.label {
+    background: var(--sub-bg);
+    padding: 8px 12px;
+    font-size: 13px;
+    color: #333;
+  }
+  table.timesheet td.label.regie { background: #fef3f2; }
+  table.timesheet td.row-total {
+    background: #fffbe6;
+    font-weight: bold;
+    text-align: center;
+    color: var(--brand);
+  }
+  table.timesheet input[type="number"] {
+    border: none;
+    background: transparent;
+    width: 100%;
+    min-width: 50px;
+  }
+  table.timesheet input[type="number"]:focus { background: #fffde7; outline: 1px solid var(--brand-light); }
+
+  .checkbox-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .checkbox-row label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: normal;
+    cursor: pointer;
+  }
+  .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+
+  /* Sticky footer total */
+  .sticky-total {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    border-top: 2px solid var(--brand);
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+    padding: 16px 24px;
+    z-index: 100;
+  }
+  .sticky-total .inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    align-items: center;
+    gap: 24px;
+  }
+  .stat { display: flex; flex-direction: column; }
+  .stat .lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat .val { font-size: 22px; font-weight: bold; }
+  .total-ok { color: var(--green); }
+  .total-warn { color: var(--amber); }
+  .total-err { color: var(--red); }
+  button.submit-btn {
+    background: var(--brand);
+    color: white;
+    border: 0;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  button.submit-btn:hover { background: #163758; }
+  button.submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+  .err-msg { color: var(--red); font-size: 12px; margin-top: 4px; min-height: 16px; }
+  .hint { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 4px; }
+
+  .toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--green);
+    color: white;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    z-index: 200;
+    display: none;
+  }
+  .toast.error { background: var(--red); }
+
+  @media (max-width: 700px) {
+    .row-grid { grid-template-columns: 1fr; }
+    table.timesheet th.first { min-width: 140px; font-size: 11px; }
+    table.timesheet th { font-size: 10px; padding: 6px 2px; }
+    .sticky-total .inner { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat .val { font-size: 18px; }
+    button.submit-btn { grid-column: span 2; }
+  }
+</style>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+
+<div class="wrap">
+  <header class="top">
+    <h1>Weekly Timesheet</h1>
+    <p>
+      Submit every Friday for the full work week (Monday → Friday). Smallest unit: <b>0.0625 days = 30 min</b>
+      (0.125 = 1h, 0.25 = 2h, 0.5 = half day, 1 = full day). Total must equal <b>5 days</b>.
+      If you log less than 5, the gap auto-fills to <b>Production interne</b>. If you log more than 5, submit is blocked.
+      Resubmit anytime — latest overrides previous for the same week.
+    </p>
+  </header>
+
+  <form id="timesheet-form" autocomplete="off">
+
+    <!-- IDENTITY -->
+    <div class="card">
+      <h2>Who & when</h2>
+      <div class="row-grid">
+        <div>
+          <label for="email">Email *</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div>
+          <label for="weekStart">Start of current week (Monday) *</label>
+          <input type="date" id="weekStart" name="weekStart" required>
+        </div>
+      </div>
+    </div>
+
+    <!-- BILLING -->
+    <div class="card">
+      <h2>Billing time</h2>
+      <p class="hint">All projects are listed below. Fill only the rows where you spent time. Tasks per project: Développement, Bugs / MàJ, Documentation, Gestion projet, Point interne, Réunion client, QC.</p>
+      <div style="overflow-x: auto;">
+        <table class="timesheet" id="billing-table">
+          <thead>
+            <tr>
+              <th class="first">Project</th>
+              <th>Dév</th>
+              <th>Bugs / MàJ</th>
+              <th>Doc</th>
+              <th>Gestion</th>
+              <th>Pt interne</th>
+              <th>R. client</th>
+              <th>QC</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="billing-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- NON-BILLING -->
+    <div class="card">
+      <h2>Non-billing time</h2>
+      <p class="hint">Production interne is auto-filled from the gap, so don't enter it here.</p>
+      <table class="timesheet">
+        <thead>
+          <tr>
+            <th class="first">Activity</th>
+            <th style="width: 120px;">Days</th>
+          </tr>
+        </thead>
+        <tbody id="nonbilling-body"></tbody>
+      </table>
+    </div>
+
+    <!-- TIME OFF -->
+    <div class="card">
+      <h2>Time off</h2>
+      <table class="timesheet">
+        <thead>
+          <tr>
+            <th class="first">Type</th>
+            <th style="width: 120px;">Days</th>
+          </tr>
+        </thead>
+        <tbody id="timeoff-body"></tbody>
+      </table>
+    </div>
+
+    <!-- WFH -->
+    <div class="card">
+      <h2>Working from home</h2>
+      <p class="hint">Tick the days you worked from home this week.</p>
+      <div class="checkbox-row" id="wfh-row">
+        <label><input type="checkbox" name="wfh" value="Mon"> Monday</label>
+        <label><input type="checkbox" name="wfh" value="Tue"> Tuesday</label>
+        <label><input type="checkbox" name="wfh" value="Wed"> Wednesday</label>
+        <label><input type="checkbox" name="wfh" value="Thu"> Thursday</label>
+        <label><input type="checkbox" name="wfh" value="Fri"> Friday</label>
+      </div>
+    </div>
+
+    <!-- COMMENTS -->
+    <div class="card">
+      <h2>Comments (optional)</h2>
+      <textarea id="comments" rows="2" placeholder="Anything to flag for this week?"></textarea>
+    </div>
+
+  </form>
+</div>
+
+<!-- STICKY TOTAL FOOTER -->
+<div class="sticky-total">
+  <div class="inner">
+    <div class="stat">
+      <span class="lbl">Manually entered</span>
+      <span class="val" id="manualTotal">0</span>
+    </div>
+    <div class="stat">
+      <span class="lbl">Auto → Production interne</span>
+      <span class="val" id="autoFill">5</span>
+    </div>
+    <div class="stat">
+      <span class="lbl">Grand total</span>
+      <span class="val" id="grandTotal">5 / 5</span>
+    </div>
+    <button type="submit" form="timesheet-form" class="submit-btn" id="submitBtn">Submit</button>
+  </div>
+  <div class="err-msg" id="errMsg" style="text-align: center; padding-top: 8px;"></div>
+</div>
+
+<script>
+  // =========================================================
+  // CONFIG — paste your Apps Script Web App URL here after deploying it
+  // =========================================================
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyUhfW211pozOYRKOJBZM9vCcRLxDhmsm3OShM1F_1SV2HWaqpg253ekKdu75xZYiWR/exec";
+
+  // =========================================================
+  // DATA
+  // =========================================================
+  const PROJECTS = [
+    { name: "[SPRINT] Forward (ST2)", type: "sprint" },
+    { name: "[SPRINT] MàJ C-Care HR Dashboard", type: "sprint" },
+    { name: "[SPRINT] Dashboard financier IBL (IBL1)", type: "sprint" },
+    { name: "[SPRINT] SUEZ", type: "sprint" },
+    { name: "[SPRINT] Novetude", type: "sprint" },
+    { name: "[SPRINT] Data Engineering (Social media)", type: "sprint" },
+    { name: "[SPRINT] Stratos - Aprium", type: "sprint" },
+    { name: "[SPRINT] C-Care - Landing page redesign (CC6)", type: "sprint" },
+    { name: "[REGIE] Les Bienheureux", type: "regie" },
+    { name: "[REGIE] Régie TSE", type: "regie" },
+    { name: "[REGIE] TDB Financier Arma Groupe", type: "regie" },
+    { name: "[REGIE] Nos Vies Notre Priorité (SNCF)", type: "regie" }
+  ];
+
+  const TASK_TYPES = [
+    "Développement",
+    "Bugs / MàJ / Corrections",
+    "Documentation",
+    "Gestion de projet",
+    "Point interne",
+    "Réunion client",
+    "QC"
+  ];
+
+  const NON_BILLING = ["Formations", "Avant-vente", "Coordination d'équipe"];
+  const TIME_OFF = ["Planned leave", "Sick", "Public holiday"];
+
+  const STEP = 0.0625;
+  const TARGET = 5;
+
+  // =========================================================
+  // BUILD UI
+  // =========================================================
+  function buildBilling() {
+    const tbody = document.getElementById("billing-body");
+    PROJECTS.forEach((p, idx) => {
+      const tr = document.createElement("tr");
+      const labelTd = document.createElement("td");
+      labelTd.className = "label" + (p.type === "regie" ? " regie" : "");
+      labelTd.textContent = p.name;
+      tr.appendChild(labelTd);
+      TASK_TYPES.forEach((t, ti) => {
+        const td = document.createElement("td");
+        const inp = document.createElement("input");
+        inp.type = "number";
+        inp.min = "0";
+        inp.max = "5";
+        inp.step = STEP;
+        inp.dataset.kind = "billing";
+        inp.dataset.project = p.name;
+        inp.dataset.task = t;
+        inp.dataset.row = idx;
+        inp.addEventListener("input", recalc);
+        td.appendChild(inp);
+        tr.appendChild(td);
+      });
+      const totalTd = document.createElement("td");
+      totalTd.className = "row-total";
+      totalTd.id = "billing-total-" + idx;
+      totalTd.textContent = "0";
+      tr.appendChild(totalTd);
+      tbody.appendChild(tr);
+    });
+  }
+
+  function buildSimpleList(containerId, items, kind) {
+    const tbody = document.getElementById(containerId);
+    items.forEach(activity => {
+      const tr = document.createElement("tr");
+      const labelTd = document.createElement("td");
+      labelTd.className = "label";
+      labelTd.textContent = activity;
+      tr.appendChild(labelTd);
+      const inputTd = document.createElement("td");
+      const inp = document.createElement("input");
+      inp.type = "number";
+      inp.min = "0";
+      inp.max = "5";
+      inp.step = STEP;
+      inp.dataset.kind = kind;
+      inp.dataset.activity = activity;
+      inp.addEventListener("input", recalc);
+      inputTd.appendChild(inp);
+      tr.appendChild(inputTd);
+      tbody.appendChild(tr);
+    });
+  }
+
+  buildBilling();
+  buildSimpleList("nonbilling-body", NON_BILLING, "nonbilling");
+  buildSimpleList("timeoff-body", TIME_OFF, "timeoff");
+
+  // Set default week to current Monday
+  const today = new Date();
+  const day = today.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + diff);
+  document.getElementById("weekStart").value = monday.toISOString().slice(0, 10);
+
+  // =========================================================
+  // LIVE TOTAL
+  // =========================================================
+  function recalc() {
+    let manual = 0;
+    // Per-row billing totals
+    PROJECTS.forEach((p, idx) => {
+      let rowSum = 0;
+      document.querySelectorAll(`input[data-kind="billing"][data-row="${idx}"]`).forEach(inp => {
+        const v = parseFloat(inp.value);
+        if (!isNaN(v)) rowSum += v;
+      });
+      document.getElementById("billing-total-" + idx).textContent = formatNum(rowSum);
+      manual += rowSum;
+    });
+    document.querySelectorAll('input[data-kind="nonbilling"], input[data-kind="timeoff"]').forEach(inp => {
+      const v = parseFloat(inp.value);
+      if (!isNaN(v)) manual += v;
+    });
+    const auto = Math.max(0, TARGET - manual);
+    const grand = manual + auto;
+
+    document.getElementById("manualTotal").textContent = formatNum(manual);
+    document.getElementById("autoFill").textContent = formatNum(auto);
+    document.getElementById("grandTotal").textContent = formatNum(grand) + " / " + TARGET;
+
+    // Color logic
+    const manualEl = document.getElementById("manualTotal");
+    const grandEl = document.getElementById("grandTotal");
+    [manualEl, grandEl].forEach(el => el.classList.remove("total-ok", "total-warn", "total-err"));
+
+    if (manual > TARGET) {
+      manualEl.classList.add("total-err");
+      grandEl.classList.add("total-err");
+      document.getElementById("errMsg").textContent = `Total exceeds 5 days (${formatNum(manual)}). Reduce entries to submit.`;
+      document.getElementById("submitBtn").disabled = true;
+    } else if (Math.abs(manual - TARGET) < 0.0001) {
+      manualEl.classList.add("total-ok");
+      grandEl.classList.add("total-ok");
+      document.getElementById("errMsg").textContent = "";
+      document.getElementById("submitBtn").disabled = false;
+    } else if (manual >= 4) {
+      manualEl.classList.add("total-warn");
+      grandEl.classList.add("total-ok");
+      document.getElementById("errMsg").textContent = "";
+      document.getElementById("submitBtn").disabled = false;
+    } else {
+      manualEl.classList.add("total-err");
+      grandEl.classList.add("total-ok");
+      document.getElementById("errMsg").textContent = "";
+      document.getElementById("submitBtn").disabled = false;
+    }
+  }
+
+  function formatNum(n) {
+    if (n === 0) return "0";
+    // Strip trailing zeros from decimals
+    return parseFloat(n.toFixed(4)).toString();
+  }
+
+  recalc();
+
+  // =========================================================
+  // SUBMIT
+  // =========================================================
+  document.getElementById("timesheet-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting…";
+
+    const entries = [];
+    PROJECTS.forEach((p, idx) => {
+      TASK_TYPES.forEach(t => {
+        const inp = document.querySelector(`input[data-kind="billing"][data-row="${idx}"][data-task="${CSS.escape(t)}"]`);
+        const v = parseFloat(inp.value);
+        if (!isNaN(v) && v > 0) {
+          entries.push({ category: "Billing", project: p.name, taskOrActivity: t, days: v });
+        }
+      });
+    });
+    document.querySelectorAll('input[data-kind="nonbilling"]').forEach(inp => {
+      const v = parseFloat(inp.value);
+      if (!isNaN(v) && v > 0) {
+        entries.push({ category: "Non-billing", project: "", taskOrActivity: inp.dataset.activity, days: v });
+      }
+    });
+    document.querySelectorAll('input[data-kind="timeoff"]').forEach(inp => {
+      const v = parseFloat(inp.value);
+      if (!isNaN(v) && v > 0) {
+        entries.push({ category: "Off", project: "", taskOrActivity: inp.dataset.activity, days: v });
+      }
+    });
+
+    const manual = entries.reduce((a, b) => a + b.days, 0);
+    const auto = Math.max(0, TARGET - manual);
+    if (auto > 0) {
+      entries.push({ category: "Non-billing", project: "", taskOrActivity: "Production interne (auto)", days: auto });
+    }
+
+    const wfh = Array.from(document.querySelectorAll('input[name="wfh"]:checked')).map(c => c.value).join(",");
+
+    const payload = {
+      email: document.getElementById("email").value,
+      weekStart: document.getElementById("weekStart").value,
+      wfh,
+      comments: document.getElementById("comments").value,
+      entries,
+      manualTotal: manual,
+      autoFill: auto,
+      submittedAt: new Date().toISOString()
+    };
+
+    try {
+      const resp = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors", // Apps Script web apps need this; you can't read the response, but it does write
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+      // With no-cors, we can't actually read resp. We assume success unless network throws.
+      showToast("✅ Submitted! Latest data saved for this week.", false);
+      submitBtn.textContent = "Submit another";
+      submitBtn.disabled = false;
+    } catch (err) {
+      showToast("❌ Submission failed. Try again or contact support.", true);
+      submitBtn.textContent = "Submit";
+      submitBtn.disabled = false;
+    }
+  });
+
+  function showToast(msg, isError) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = "toast" + (isError ? " error" : "");
+    t.style.display = "block";
+    setTimeout(() => { t.style.display = "none"; }, 4000);
+  }
+</script>
+</body>
+</html>
