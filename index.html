@@ -93,16 +93,6 @@
     border-radius: 2px;
   }
 
-  /* NEXT WEEK CARD — visually distinct, planning rather than logging */
-  .next-week-card {
-    background: linear-gradient(135deg, #F0F7FA 0%, #FFFFFF 100%);
-    border: 2px dashed var(--teal);
-  }
-  .next-week-card h2 { color: var(--teal); }
-  .next-week-card h2::before { background: var(--teal); }
-  .next-week-card .checkbox-row label { background: white; }
-  .next-week-card .checkbox-row label.checked { background: var(--teal); }
-
   /* INPUTS */
   label {
     display: block;
@@ -196,6 +186,7 @@
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-align: center;
   }
 
   /* CHECKBOXES */
@@ -428,7 +419,7 @@
 
     <!-- IDENTITY -->
     <div class="card">
-      <h2>Who & when <span id="draft-indicator" class="draft-badge" style="display:none">📝 Draft saved — <span id="clear-draft-btn" style="text-decoration: underline">clear</span></span></h2>
+      <h2>Who & when <span id="draft-indicator" class="draft-badge" style="display:none">Draft saved — <span id="clear-draft-btn" style="text-decoration: underline">clear</span></span></h2>
       <div class="row-grid">
         <div>
           <label for="email">Email *</label>
@@ -495,28 +486,9 @@
       </table>
     </div>
 
-    <!-- WFH -->
-    <div class="card">
-      <h2>Working from home</h2>
-      <p class="hint">Tick the days you worked from home this week.</p>
-      <div class="checkbox-row" id="wfh-row">
-        <label><input type="checkbox" name="wfh" value="Mon"> <span>Monday</span></label>
-        <label><input type="checkbox" name="wfh" value="Tue"> <span>Tuesday</span></label>
-        <label><input type="checkbox" name="wfh" value="Wed"> <span>Wednesday</span></label>
-        <label><input type="checkbox" name="wfh" value="Thu"> <span>Thursday</span></label>
-        <label><input type="checkbox" name="wfh" value="Fri"> <span>Friday</span></label>
-      </div>
-    </div>
-
-    <!-- COMMENTS -->
-    <div class="card">
-      <h2>Comments (optional)</h2>
-      <textarea id="comments" rows="2" placeholder="Anything to flag for this week?"></textarea>
-    </div>
-
     <!-- NEXT WEEK PLANNING -->
-    <div class="card next-week-card">
-      <h2>📅 Heads-up for next week</h2>
+    <div class="card">
+      <h2>Heads-up for next week</h2>
       <p class="hint">Help your team plan ahead. These don't count toward this week's 5 days.</p>
 
       <div style="margin-bottom: 18px">
@@ -542,12 +514,18 @@
       </div>
     </div>
 
+    <!-- COMMENTS -->
+    <div class="card">
+      <h2>Comments (optional)</h2>
+      <textarea id="comments" rows="2" placeholder="Anything to flag for this week?"></textarea>
+    </div>
+
   </form>
 </div>
 
 <!-- CONFIRMATION SCREEN -->
 <div id="confirm-screen" class="confirm-screen">
-  <div class="check" id="confirm-check">✓</div>
+  <div class="check" id="confirm-check">OK</div>
   <h2 id="confirm-title">Submitted!</h2>
   <p class="sub" id="confirm-sub">Your timesheet has been recorded. A recap email is on its way.</p>
   <table class="summary" id="confirm-summary"></table>
@@ -644,7 +622,7 @@
   weekInput.addEventListener("change", () => {
     const d = new Date(weekInput.value + "T00:00:00");
     if (d.getDay() !== 1) {
-      document.getElementById("weekErr").textContent = "⚠️ Pick a Monday — the week start must be a Monday.";
+      document.getElementById("weekErr").textContent = "Please pick a Monday — the week start must be a Monday.";
       // Snap to nearest previous Monday
       const offset = d.getDay() === 0 ? -6 : 1 - d.getDay();
       d.setDate(d.getDate() + offset);
@@ -703,14 +681,14 @@
     if (sprints.length > 0) {
       const dividerSprint = document.createElement("tr");
       dividerSprint.className = "divider";
-      dividerSprint.innerHTML = `<td colspan="${TASK_TYPES.length + 2}">📦 Sprint projects</td>`;
+      dividerSprint.innerHTML = `<td colspan="${TASK_TYPES.length + 2}">Sprint projects</td>`;
       tbody.appendChild(dividerSprint);
       sprints.forEach((p, i) => addProjectRow(tbody, p, "sprint-" + i));
     }
     if (regies.length > 0) {
       const dividerRegie = document.createElement("tr");
       dividerRegie.className = "divider";
-      dividerRegie.innerHTML = `<td colspan="${TASK_TYPES.length + 2}">🔁 Régies / Maintenance</td>`;
+      dividerRegie.innerHTML = `<td colspan="${TASK_TYPES.length + 2}">Régies / Maintenance</td>`;
       tbody.appendChild(dividerRegie);
       regies.forEach((p, i) => addProjectRow(tbody, p, "regie-" + i));
     }
@@ -919,14 +897,12 @@
         entries.push({ category: "Off", project: "", taskOrActivity: inp.dataset.activity, days: v });
       }
     });
-    const wfh = Array.from(document.querySelectorAll('input[name="wfh"]:checked')).map(c => c.value).join(",");
     const nextWfh = Array.from(document.querySelectorAll('input[name="nextWfh"]:checked')).map(c => c.value).join(",");
     const nextLeave = Array.from(document.querySelectorAll('input[name="nextLeave"]:checked')).map(c => c.value).join(",");
     return {
       email: document.getElementById("email").value,
       name: document.getElementById("name").value,
       weekStart: document.getElementById("weekStart").value,
-      wfh,
       nextWfh,
       nextLeave,
       comments: document.getElementById("comments").value,
@@ -937,12 +913,6 @@
   function applyFormData(data) {
     if (data.name) document.getElementById("name").value = data.name;
     if (data.comments) document.getElementById("comments").value = data.comments;
-    if (data.wfh) {
-      data.wfh.split(",").forEach(v => {
-        const cb = document.querySelector(`input[name="wfh"][value="${v}"]`);
-        if (cb) { cb.checked = true; cb.parentElement.classList.add("checked"); }
-      });
-    }
     if (data.nextWfh) {
       data.nextWfh.split(",").forEach(v => {
         const cb = document.querySelector(`input[name="nextWfh"][value="${v}"]`);
@@ -983,7 +953,7 @@
     // Warn on total = 0
     const manual = data.entries.reduce((a, b) => a + b.days, 0);
     if (manual === 0) {
-      if (!confirm("⚠️ You haven't logged any time. Submitting will record 5 days as Production interne. Continue?")) {
+      if (!confirm("You haven't logged any time. Submitting will record 5 days as Production interne. Continue?")) {
         return;
       }
     }
@@ -1028,7 +998,7 @@
     screen.classList.add("active");
     screen.classList.toggle("error", !!isError);
 
-    document.getElementById("confirm-check").textContent = isError ? "✕" : "✓";
+    document.getElementById("confirm-check").textContent = isError ? "!" : "OK";
     if (isError) {
       document.getElementById("confirm-title").textContent = "Submission failed";
       document.getElementById("confirm-sub").textContent = "Please try again. Error: " + (errText || "network");
@@ -1036,10 +1006,10 @@
       const isOver = data.manualTotal > TARGET;
       const isAuto = !isOver && data.autoFill > 0;
       document.getElementById("confirm-title").textContent = isOver
-        ? "⚠️ Submitted but over 5 days"
+        ? "Submitted, but over 5 days"
         : isAuto
-          ? "✓ Submitted with auto-balance"
-          : "✓ Timesheet submitted";
+          ? "Submitted with auto-balance"
+          : "Timesheet submitted";
       document.getElementById("confirm-sub").textContent = `Week of ${data.weekStart} — ${formatNum(data.manualTotal + data.autoFill)} day(s) total. Recap email on its way.`;
     }
 
@@ -1050,7 +1020,6 @@
       const detail = en.project ? `${en.project} — ${en.taskOrActivity}` : en.taskOrActivity;
       html += `<tr class="${isAutoRow ? 'auto' : ''}"><td>${en.category}</td><td>${detail}</td><td style="text-align:right">${formatNum(en.days)}</td></tr>`;
     });
-    if (data.wfh) html += `<tr><td>WFH this week</td><td colspan="2">${data.wfh}</td></tr>`;
     if (data.nextWfh) html += `<tr><td>WFH next week</td><td colspan="2">${data.nextWfh}</td></tr>`;
     if (data.nextLeave) html += `<tr><td>Leave next week</td><td colspan="2">${data.nextLeave}</td></tr>`;
     html += '</tbody>';
