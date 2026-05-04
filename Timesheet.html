@@ -202,7 +202,7 @@
   .add-custom-btn:hover { background: #E0F2F4; }
   .custom-row-headers { display: grid; grid-template-columns: 1fr 1fr 110px 36px; gap: 8px; margin-bottom: 6px; padding: 0 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; }
 
-  /* PROJECT DROPDOWN PANEL */
+  /* DROPDOWN PANEL — shared by project picker and email picker */
   .project-dropdown {
     position: fixed;
     background: white;
@@ -341,7 +341,7 @@
       <div class="row-grid">
         <div>
           <label for="email">Email *</label>
-          <input type="email" id="email" name="email" required placeholder="you@datapilot.fr" pattern="[a-zA-Z0-9._%+\-]+@datapilot\.fr$" title="Email must end with @datapilot.fr">
+          <input type="email" id="email" name="email" required placeholder="Pick yourself or type your @datapilot.fr email" pattern="[a-zA-Z0-9._%+\-]+@datapilot\.fr$" title="Email must end with @datapilot.fr" autocomplete="off">
           <div id="emailErr" class="err-msg" style="text-align:left"></div>
         </div>
         <div>
@@ -370,7 +370,6 @@
         </table>
       </div>
 
-      <!-- Ad-hoc divider — same visual style as Sprint/Régies dividers -->
       <div class="adhoc-divider">Ad-hoc</div>
 
       <div class="custom-section">
@@ -491,7 +490,6 @@
     "QC"
   ];
 
-  // Non-billing items: { name, hint } — hint shows as small grey text under the label
   const NON_BILLING = [
     { name: "Formations",          hint: "Weekly Training, Soft Skills..." },
     { name: "Production interne",  hint: "Dashboard interne, Documentation interne, training intern..." },
@@ -527,6 +525,7 @@
 
   let PROJECTS = [];
   let ALL_PROJECTS = [];
+  let TEAM_EMAILS = [];   // populated from ?action=users
 
   const params = new URLSearchParams(window.location.search);
   if (params.get("email")) document.getElementById("email").value = params.get("email");
@@ -563,33 +562,40 @@
       return;
     }
     try {
-      const [activeResp, allResp] = await Promise.all([
+      const [activeResp, allResp, usersResp] = await Promise.all([
         fetch(APPS_SCRIPT_URL + "?action=projects", { method: "GET" }),
-        fetch(APPS_SCRIPT_URL + "?action=allProjects", { method: "GET" })
+        fetch(APPS_SCRIPT_URL + "?action=allProjects", { method: "GET" }),
+        fetch(APPS_SCRIPT_URL + "?action=users", { method: "GET" })
       ]);
       const activeData = await activeResp.json();
       const allData = await allResp.json();
+      const usersData = await usersResp.json();
       PROJECTS = (activeData.ok && Array.isArray(activeData.projects) && activeData.projects.length > 0)
         ? activeData.projects : FALLBACK_PROJECTS;
       ALL_PROJECTS = (allData.ok && Array.isArray(allData.projects) && allData.projects.length > 0)
         ? allData.projects : PROJECTS.slice();
+      TEAM_EMAILS = (usersData.ok && Array.isArray(usersData.users))
+        ? usersData.users : [];
     } catch (err) {
       PROJECTS = FALLBACK_PROJECTS;
       ALL_PROJECTS = FALLBACK_PROJECTS.slice();
+      TEAM_EMAILS = [];
     }
     buildBilling();
   }
 
   // ============================================================
-  // CUSTOM DROPDOWN — branded, styled, supports filter + groups
+  // SHARED DROPDOWN COMPONENT — used by both project picker AND email picker
+  // dataMode: 'projects' or 'emails'
   // ============================================================
   const dropdownState = {
     panel: null,
     input: null,
-    activeOpenSection: 'active',   // 'active' or 'inactive'
+    activeOpenSection: 'active',
     inactiveExpanded: false,
-    keyIndex: -1,                  // for keyboard nav
-    visibleItems: []
+    keyIndex: -1,
+    visibleItems: [],
+    dataMode: 'projects'   // current rendering mode
   };
 
   function ensureDropdownPanel() {
@@ -597,36 +603,31 @@
     const panel = document.createElement('div');
     panel.className = 'project-dropdown';
     panel.style.display = 'none';
-    panel.innerHTML = `
-      <div class="project-dropdown-list" role="listbox"></div>
-    `;
+    panel.innerHTML = `<div class="project-dropdown-list" role="listbox"></div>`;
     document.body.appendChild(panel);
 
-    // Click outside closes it
     document.addEventListener('mousedown', (e) => {
       if (panel.style.display === 'none') return;
       if (panel.contains(e.target)) return;
       if (e.target === dropdownState.input) return;
       closeDropdown();
     });
-    // Escape closes it
     document.addEventListener('keydown', (e) => {
       if (panel.style.display === 'none') return;
-      if (e.key === 'Escape') {
-        closeDropdown();
-      }
+      if (e.key === 'Escape') closeDropdown();
     });
     dropdownState.panel = panel;
     return panel;
   }
 
-  function openDropdown(input) {
+  function openDropdown(input, mode) {
     const panel = ensureDropdownPanel();
     dropdownState.input = input;
+    dropdownState.dataMode = mode || 'projects';
     dropdownState.inactiveExpanded = false;
     dropdownState.keyIndex = -1;
     positionDropdown();
-    renderDropdown('');
+    renderDropdown(input.value || '');
     panel.style.display = 'block';
   }
 
@@ -647,6 +648,75 @@
   }
 
   function renderDropdown(filter) {
+    if (dropdownState.dataMode === 'emails') {
+      renderEmailDropdown(filter);
+    } else {
+      renderProjectDropdown(filter);
+    }
+  }
+
+  function renderEmailDropdown(filter) {
+    const panel = dropdownState.panel;
+    const list = panel.querySelector('.project-dropdown-list');
+    list.innerHTML = '';
+    const term = (filter || '').toLowerCase().trim();
+
+    const matches = TEAM_EMAILS
+      .filter(e => !term || e.indexOf(term) !== -1);
+
+    dropdownState.visibleItems = [];
+
+    if (TEAM_EMAILS.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'project-dropdown-empty';
+      empty.textContent = 'Team list unavailable. Type your @datapilot.fr email manually.';
+      list.appendChild(empty);
+      return;
+    }
+
+    if (matches.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'project-dropdown-empty';
+      empty.textContent = term
+        ? `No matches for "${term}". You can still submit with your own @datapilot.fr email.`
+        : 'No team members found.';
+      list.appendChild(empty);
+      return;
+    }
+
+    const header = document.createElement('div');
+    header.className = 'project-dropdown-header';
+    header.textContent = `Team (${matches.length})`;
+    list.appendChild(header);
+
+    matches.forEach(email => list.appendChild(buildEmailItem(email, term)));
+  }
+
+  function buildEmailItem(email, term) {
+    const item = document.createElement('div');
+    item.className = 'project-dropdown-item';
+    item.dataset.email = email;
+
+    const text = document.createElement('span');
+    text.className = 'project-text';
+    text.innerHTML = highlightMatch(email, term);
+    item.appendChild(text);
+
+    item.addEventListener('mousedown', (e) => {
+      e.preventDefault();
+      if (dropdownState.input) {
+        dropdownState.input.value = email;
+        dropdownState.input.dispatchEvent(new Event('input', { bubbles: true }));
+        dropdownState.input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      closeDropdown();
+    });
+
+    dropdownState.visibleItems.push(item);
+    return item;
+  }
+
+  function renderProjectDropdown(filter) {
     const panel = dropdownState.panel;
     const list = panel.querySelector('.project-dropdown-list');
     list.innerHTML = '';
@@ -676,7 +746,7 @@
       header.className = 'project-dropdown-header';
       header.textContent = `Active (${active.length})`;
       list.appendChild(header);
-      active.forEach(p => list.appendChild(buildItem(p, term)));
+      active.forEach(p => list.appendChild(buildProjectItem(p, term)));
     }
 
     if (inactive.length > 0) {
@@ -689,12 +759,12 @@
       });
       list.appendChild(sectionHeader);
       if (dropdownState.inactiveExpanded || term) {
-        inactive.forEach(p => list.appendChild(buildItem(p, term)));
+        inactive.forEach(p => list.appendChild(buildProjectItem(p, term)));
       }
     }
   }
 
-  function buildItem(p, term) {
+  function buildProjectItem(p, term) {
     const item = document.createElement('div');
     item.className = 'project-dropdown-item';
     if (p.active === false) item.classList.add('is-inactive');
@@ -717,7 +787,7 @@
     }
 
     item.addEventListener('mousedown', (e) => {
-      e.preventDefault();   // keep focus on the input
+      e.preventDefault();
       if (dropdownState.input) {
         dropdownState.input.value = p.name;
         dropdownState.input.dispatchEvent(new Event('input', { bubbles: true }));
@@ -773,12 +843,25 @@
     });
   }
 
-  // Reposition on window scroll/resize while open
   window.addEventListener('scroll', () => {
     if (dropdownState.panel && dropdownState.panel.style.display !== 'none') positionDropdown();
   }, true);
   window.addEventListener('resize', () => {
     if (dropdownState.panel && dropdownState.panel.style.display !== 'none') positionDropdown();
+  });
+
+  // Wire the email field to use the dropdown in 'emails' mode
+  const emailInput = document.getElementById("email");
+  emailInput.addEventListener('focus', () => openDropdown(emailInput, 'emails'));
+  emailInput.addEventListener('click', () => openDropdown(emailInput, 'emails'));
+  emailInput.addEventListener('input', () => {
+    if (dropdownState.input === emailInput) {
+      dropdownState.keyIndex = -1;
+      renderDropdown(emailInput.value);
+    }
+  });
+  emailInput.addEventListener('keydown', (e) => {
+    if (dropdownState.input === emailInput) handleDropdownKeyboardNav(e);
   });
 
   function buildBilling() {
@@ -849,7 +932,6 @@
       const tr = document.createElement("tr");
       const labelTd = document.createElement("td");
       labelTd.className = "label";
-      // Build label with optional hint sub-text
       const nameSpan = document.createElement("span");
       nameSpan.textContent = item.name;
       labelTd.appendChild(nameSpan);
@@ -877,9 +959,6 @@
   buildSimpleList("timeoff-body", TIME_OFF, "timeoff");
   loadProjects();
 
-  // =========================================================
-  // CUSTOM ROWS
-  // =========================================================
   let customRowSeq = 0;
 
   function addCustomRow(project, task, days) {
@@ -906,10 +985,9 @@
     });
     wrap.querySelectorAll('input').forEach(i => i.addEventListener("input", onChange));
 
-    // Wire the custom dropdown to the project field
     const projInput = wrap.querySelector('input[data-kind="custom-project"]');
-    projInput.addEventListener('focus', () => openDropdown(projInput));
-    projInput.addEventListener('click', () => openDropdown(projInput));
+    projInput.addEventListener('focus', () => openDropdown(projInput, 'projects'));
+    projInput.addEventListener('click', () => openDropdown(projInput, 'projects'));
     projInput.addEventListener('input', () => {
       if (dropdownState.input === projInput) {
         dropdownState.keyIndex = -1;
@@ -949,7 +1027,6 @@
       const v = parseFloat(inp.value);
       if (!isNaN(v)) manual += v;
     });
-    // Custom rows
     document.querySelectorAll('#custom-rows input[data-kind="custom-days"]').forEach(inp => {
       const v = parseFloat(inp.value);
       if (!isNaN(v)) manual += v;
@@ -1040,7 +1117,6 @@
   document.getElementById("email").addEventListener("change", restoreDraft);
   document.getElementById("weekStart").addEventListener("change", restoreDraft);
 
-  const emailInput = document.getElementById("email");
   const emailErr = document.getElementById("emailErr");
   function validateEmail() {
     const v = emailInput.value.trim();
@@ -1052,7 +1128,10 @@
     emailErr.textContent = "";
     return true;
   }
-  emailInput.addEventListener("blur", validateEmail);
+  emailInput.addEventListener("blur", () => {
+    // Slight delay so a click on the dropdown's items can register first
+    setTimeout(validateEmail, 150);
+  });
   emailInput.addEventListener("input", () => {
     if (emailErr.textContent) validateEmail();
   });
@@ -1077,14 +1156,12 @@
         entries.push({ category: "Off", project: "", taskOrActivity: inp.dataset.activity, days: v });
       }
     });
-    // Ad-hoc rows: prefix with [CUSTOM] only if the project name isn't an existing one
     document.querySelectorAll('#custom-rows .custom-row').forEach(row => {
       const projectName = (row.querySelector('input[data-kind="custom-project"]').value || '').trim();
       const taskName = (row.querySelector('input[data-kind="custom-task"]').value || '').trim();
       const days = parseFloat(row.querySelector('input[data-kind="custom-days"]').value);
       if (isNaN(days) || days <= 0) return;
       if (!projectName && !taskName) return;
-      // If project matches an existing one (active or inactive), keep it as-is. Otherwise prefix with [CUSTOM].
       const existsInMaster = ALL_PROJECTS.some(p => p.name === projectName);
       let storedProject;
       if (!projectName) {
@@ -1116,7 +1193,6 @@
 
   function applyFormData(data) {
     if (data.comments) document.getElementById("comments").value = data.comments;
-    // Clear existing custom rows so we don't duplicate when restoring
     const customContainer = document.getElementById("custom-rows");
     if (customContainer) customContainer.innerHTML = "";
     if (data.nextWfh) {
@@ -1133,7 +1209,6 @@
     }
     (data.entries || []).forEach(en => {
       if (en.category === "Billing" && en.custom) {
-        // Custom row: strip [CUSTOM] prefix when restoring to input
         const projectName = (en.project || '').replace(/^\[CUSTOM\]\s*/, '');
         const taskName = en.taskOrActivity === '(unspecified)' ? '' : en.taskOrActivity;
         addCustomRow(projectName, taskName, en.days);
