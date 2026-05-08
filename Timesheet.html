@@ -28,6 +28,7 @@
     --red-bg: #FEE2E2;
     --sub-bg: #F7F4EB;
     --regie-bg: #FEF5E7;
+    --adhoc-bg: #FCE9EC;
   }
   * { box-sizing: border-box; }
   body {
@@ -81,12 +82,14 @@
   table.timesheet td { border: 1px solid var(--border); padding: 4px; background: white; }
   table.timesheet td.label { background: var(--sub-bg); padding: 10px 14px; font-size: 13px; color: var(--navy); font-weight: 500; border-left: 3px solid var(--teal); }
   table.timesheet td.label.regie { background: var(--regie-bg); border-left-color: var(--amber); }
+  table.timesheet td.label.adhoc { background: var(--adhoc-bg); border-left-color: var(--pink); }
   table.timesheet td.label .hint-text { display: block; font-size: 11px; font-weight: 400; color: var(--muted); font-style: italic; margin-top: 2px; }
   table.timesheet td.row-total { background: var(--amber-soft); font-weight: 600; text-align: center; color: var(--navy); }
   table.timesheet input[type="number"] { border: none; background: transparent; width: 100%; min-width: 50px; color: var(--navy); }
   table.timesheet input[type="number"]:focus { background: #FFFBEB; outline: 1px solid var(--teal); border-radius: 4px; }
   table.timesheet tr.has-entry td.label { background: #E0F2F4; border-left-color: var(--teal); }
   table.timesheet tr.has-entry td.label.regie { background: #FFF1D6; border-left-color: var(--amber); }
+  table.timesheet tr.has-entry td.label.adhoc { background: #F8D7DC; border-left-color: var(--pink); }
 
   table.timesheet tr.divider td { background: var(--navy-dark); color: white; padding: 8px 14px; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
 
@@ -135,76 +138,7 @@
   .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* CUSTOM ENTRIES */
-  .adhoc-divider {
-    background: var(--navy-dark);
-    color: white;
-    padding: 8px 14px;
-    font-weight: 600;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    text-align: center;
-    border-radius: 4px 4px 0 0;
-    margin-top: 16px;
-    margin-bottom: 0;
-  }
-  .custom-section { margin-top: 0; padding: 16px; background: var(--sub-bg); border: 1px dashed var(--border); border-radius: 0 0 10px 10px; }
-  .custom-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr 110px 36px;
-    gap: 8px;
-    margin-bottom: 8px;
-    align-items: center;
-  }
-  .custom-row input[type="text"] {
-    padding: 8px 12px;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 13px;
-  }
-  .custom-row input[type="number"] {
-    padding: 8px 4px;
-    background: white;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 500;
-  }
-  .custom-row input::placeholder { color: #B5B5B5; font-style: italic; }
-  .custom-row button.del {
-    background: white;
-    border: 1px solid var(--border);
-    color: var(--red);
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 1;
-    padding: 0;
-    width: 36px; height: 36px;
-    border-radius: 6px;
-    font-weight: 700;
-    transition: all 0.15s;
-  }
-  .custom-row button.del:hover { background: var(--red-bg); border-color: var(--red); }
-  .add-custom-btn {
-    background: white;
-    border: 1px dashed var(--teal);
-    color: var(--teal);
-    padding: 10px 16px;
-    border-radius: 8px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-    width: 100%;
-  }
-  .add-custom-btn:hover { background: #E0F2F4; }
-  .custom-row-headers { display: grid; grid-template-columns: 1fr 1fr 110px 36px; gap: 8px; margin-bottom: 6px; padding: 0 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); font-weight: 600; }
-
-  /* DROPDOWN PANEL — shared by project, email, and task pickers */
+  /* DROPDOWN PANEL — shared by project and email pickers */
   .project-dropdown {
     position: fixed;
     background: white;
@@ -379,8 +313,6 @@
     .sticky-total .inner { grid-template-columns: 1fr 1fr; gap: 10px; }
     .stat .val { font-size: 18px; }
     button.submit-btn { grid-column: span 2; padding: 12px; }
-    .custom-row, .custom-row-headers { grid-template-columns: 1fr 1fr 80px 36px; gap: 6px; }
-    .custom-row input { font-size: 12px; padding: 6px 8px; }
     .project-dropdown { max-width: calc(100vw - 32px); }
     .project-dropdown-list { max-height: 280px; }
     details.faq-item > summary { padding-left: 28px; font-size: 12px; }
@@ -425,7 +357,7 @@
 
     <div class="card">
       <h2>Billing time</h2>
-      <p class="hint">Sprints in blue, Régies in orange. Fill only the rows where you spent time.</p>
+      <p class="hint">Sprints in blue, Régies in orange, Ad-hoc in pink. Fill only the rows where you spent time.</p>
       <div style="overflow-x: auto;">
         <table class="timesheet" id="billing-table">
           <thead>
@@ -439,20 +371,6 @@
             <tr class="loading-row"><td colspan="9"><span class="spinner"></span>Loading projects from Google Sheet…</td></tr>
           </tbody>
         </table>
-      </div>
-
-      <div class="adhoc-divider">Ad-hoc</div>
-
-      <div class="custom-section">
-        <p class="hint">For client requests that fall outside a project (kept for invoicing). Pick a project from the dropdown — entries here are tagged <b>[Ad-hoc]</b> in the records, regardless of which project you pick.</p>
-        <div class="custom-row-headers">
-          <span>Project name</span>
-          <span>Task / activity</span>
-          <span style="text-align:center">Days</span>
-          <span></span>
-        </div>
-        <div id="custom-rows"></div>
-        <button type="button" class="add-custom-btn" id="add-custom-btn">+ Add row</button>
       </div>
     </div>
 
@@ -967,6 +885,7 @@
 
     const sprints = PROJECTS.filter(p => p.type === "sprint");
     const regies = PROJECTS.filter(p => p.type === "regie");
+    const adhocs = PROJECTS.filter(p => p.type === "adhoc");
 
     if (sprints.length > 0) {
       const dividerSprint = document.createElement("tr");
@@ -982,6 +901,13 @@
       tbody.appendChild(dividerRegie);
       regies.forEach((p, i) => addProjectRow(tbody, p, "regie-" + i));
     }
+    if (adhocs.length > 0) {
+      const dividerAdhoc = document.createElement("tr");
+      dividerAdhoc.className = "divider";
+      dividerAdhoc.innerHTML = `<td colspan="${TASK_TYPES.length + 2}">Ad-hoc client requests</td>`;
+      tbody.appendChild(dividerAdhoc);
+      adhocs.forEach((p, i) => addProjectRow(tbody, p, "adhoc-" + i));
+    }
 
     restoreDraft();
     recalc();
@@ -991,7 +917,10 @@
     const tr = document.createElement("tr");
     tr.dataset.rowid = rowId;
     const labelTd = document.createElement("td");
-    labelTd.className = "label" + (project.type === "regie" ? " regie" : "");
+    let labelClass = "label";
+    if (project.type === "regie") labelClass += " regie";
+    else if (project.type === "adhoc") labelClass += " adhoc";
+    labelTd.className = labelClass;
     labelTd.textContent = project.name;
     tr.appendChild(labelTd);
     TASK_TYPES.forEach(t => {
@@ -1048,51 +977,6 @@
   buildSimpleList("timeoff-body", TIME_OFF, "timeoff");
   loadProjects();
 
-  let customRowSeq = 0;
-
-  function addCustomRow(project, task, days) {
-    customRowSeq++;
-    const id = "custom-" + customRowSeq;
-    const wrap = document.createElement("div");
-    wrap.className = "custom-row";
-    wrap.dataset.rowid = id;
-    wrap.innerHTML = `
-      <input type="text" data-kind="custom-project" placeholder="Pick a project or type a new one..." maxlength="120" autocomplete="off">
-      <input type="text" data-kind="custom-task" placeholder="Describe the request..." maxlength="120" autocomplete="off">
-      <input type="number" data-kind="custom-days" min="0" step="${STEP}" placeholder="0">
-      <button type="button" class="del" title="Remove this row">&times;</button>
-    `;
-    document.getElementById("custom-rows").appendChild(wrap);
-
-    if (project) wrap.querySelector('input[data-kind="custom-project"]').value = project;
-    if (task) wrap.querySelector('input[data-kind="custom-task"]').value = task;
-    if (days != null) wrap.querySelector('input[data-kind="custom-days"]').value = days;
-
-    wrap.querySelector('button.del').addEventListener("click", () => {
-      wrap.remove();
-      onChange();
-    });
-    wrap.querySelectorAll('input').forEach(i => i.addEventListener("input", onChange));
-
-    // Wire project field to projects dropdown
-    const projInput = wrap.querySelector('input[data-kind="custom-project"]');
-    projInput.addEventListener('focus', () => openDropdown(projInput, 'projects'));
-    projInput.addEventListener('click', () => openDropdown(projInput, 'projects'));
-    projInput.addEventListener('input', () => {
-      if (dropdownState.input === projInput) {
-        dropdownState.keyIndex = -1;
-        renderDropdown(projInput.value);
-      }
-    });
-    projInput.addEventListener('keydown', (e) => {
-      if (dropdownState.input === projInput) handleDropdownKeyboardNav(e);
-    });
-
-    // Task field is plain free text — no dropdown wiring (removed in v12)
-  }
-
-  document.getElementById("add-custom-btn").addEventListener("click", () => addCustomRow());
-
   document.querySelectorAll('.checkbox-row input[type="checkbox"]').forEach(cb => {
     cb.addEventListener("change", () => {
       cb.parentElement.classList.toggle("checked", cb.checked);
@@ -1116,10 +1000,6 @@
       manual += rowSum;
     });
     document.querySelectorAll('input[data-kind="nonbilling"], input[data-kind="timeoff"]').forEach(inp => {
-      const v = parseFloat(inp.value);
-      if (!isNaN(v)) manual += v;
-    });
-    document.querySelectorAll('#custom-rows input[data-kind="custom-days"]').forEach(inp => {
       const v = parseFloat(inp.value);
       if (!isNaN(v)) manual += v;
     });
@@ -1201,7 +1081,6 @@
       document.querySelectorAll('input[type="number"]').forEach(i => i.value = "");
       document.querySelectorAll('input[type="checkbox"]').forEach(c => { c.checked = false; c.parentElement.classList.remove("checked"); });
       document.getElementById("comments").value = "";
-      document.getElementById("custom-rows").innerHTML = "";
       recalc();
     }
   });
@@ -1247,29 +1126,6 @@
         entries.push({ category: "Off", project: "", taskOrActivity: inp.dataset.activity, days: v });
       }
     });
-    document.querySelectorAll('#custom-rows .custom-row').forEach(row => {
-      const projectName = (row.querySelector('input[data-kind="custom-project"]').value || '').trim();
-      const taskName = (row.querySelector('input[data-kind="custom-task"]').value || '').trim();
-      const days = parseFloat(row.querySelector('input[data-kind="custom-days"]').value);
-      if (isNaN(days) || days <= 0) return;
-      if (!projectName && !taskName) return;
-      // Strip any existing prefix ([SPRINT], [REGIE], [Ad-hoc], [CUSTOM])
-      // and replace with [Ad-hoc] — entries in this section are always tagged ad-hoc.
-      let storedProject;
-      if (!projectName) {
-        storedProject = "[Ad-hoc]";
-      } else {
-        const cleaned = projectName.replace(/^\[(SPRINT|REGIE|Ad-hoc|CUSTOM)\]\s*/i, '');
-        storedProject = "[Ad-hoc] " + cleaned;
-      }
-      entries.push({
-        category: "Billing",
-        project: storedProject,
-        taskOrActivity: taskName || "(unspecified)",
-        days: days,
-        custom: true
-      });
-    });
     const nextWfh = Array.from(document.querySelectorAll('input[name="nextWfh"]:checked')).map(c => c.value).join(",");
     const nextLeave = Array.from(document.querySelectorAll('input[name="nextLeave"]:checked')).map(c => c.value).join(",");
     return {
@@ -1284,8 +1140,6 @@
 
   function applyFormData(data) {
     if (data.comments) document.getElementById("comments").value = data.comments;
-    const customContainer = document.getElementById("custom-rows");
-    if (customContainer) customContainer.innerHTML = "";
     if (data.nextWfh) {
       data.nextWfh.split(",").forEach(v => {
         const cb = document.querySelector(`input[name="nextWfh"][value="${v}"]`);
@@ -1299,12 +1153,10 @@
       });
     }
     (data.entries || []).forEach(en => {
-      if (en.category === "Billing" && en.custom) {
-        // Strip [Ad-hoc] (new) or [CUSTOM] (legacy) prefix when restoring drafts
-        const projectName = (en.project || '').replace(/^\[(Ad-hoc|CUSTOM)\]\s*/i, '');
-        const taskName = en.taskOrActivity === '(unspecified)' ? '' : en.taskOrActivity;
-        addCustomRow(projectName, taskName, en.days);
-      } else if (en.category === "Billing") {
+      // Legacy v12 drafts may have en.custom = true. Skip those silently —
+      // the bottom Ad-hoc section no longer exists and data shape is different.
+      if (en.custom) return;
+      if (en.category === "Billing") {
         const inp = document.querySelector(`input[data-kind="billing"][data-project="${cssEscape(en.project)}"][data-task="${cssEscape(en.taskOrActivity)}"]`);
         if (inp) inp.value = en.days;
       } else if (en.category === "Non-billing") {
