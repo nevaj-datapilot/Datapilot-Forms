@@ -2,10 +2,10 @@
 
 ## Live
 
-The system is deployed and in active use. URLs are kept in the team's shared Datapilot space, not in this public README.
-
-| Page | Purpose |
-|---|---|
+The system is deployed and in active use.
+ 
+| Page | Purpose | URL |
+|---|---|---|
 | Landing | Index of available forms | https://datapilot-gitenvironmennt.github.io/Datapilot-Forms/ |
 | Timesheet | Weekly timesheet | https://datapilot-gitenvironmennt.github.io/Datapilot-Forms/Timesheet.html |
 | Supplies | Office supplies request | https://datapilot-gitenvironmennt.github.io/Datapilot-Forms/Supplies.html |
