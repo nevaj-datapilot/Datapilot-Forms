@@ -36,7 +36,7 @@
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
     color: var(--text);
-    padding: 0 0 160px 0;
+    padding: 0 0 140px 0;
     font-weight: 400;
     position: relative;
     overflow-x: hidden;
@@ -391,7 +391,7 @@
       <h1>Weekly Timesheet</h1>
       <p>
         Submit every Friday for the full work week (Monday to Friday). Enter time in <b>hours</b>.
-        Smallest unit: <b>0.5h = 30 min</b>. Standard week: <b>40 hours</b> (5 days × 8h).
+        Smallest unit: <b>0.5h = 30 min</b>. Standard week: <b>40 hours</b> (5 days x 8h).
         If less than 40h, the gap auto-fills <b>Autre</b> (uncategorized). If more than 40h, you'll see a warning but can still submit (overtime is recorded).
         Resubmit anytime, the latest submission overrides the previous one for the same week.
       </p>
@@ -415,7 +415,7 @@
     </div>
     <div class="card">
       <h2>Billing time</h2>
-      <p class="hint">Sprints in blue, Régies in orange. Fill only the rows where you spent time. Values in hours.</p>
+      <p class="hint">Sprints in blue, Régies in orange. Fill only the rows where you spent time.</p>
       <div style="overflow-x: auto;">
         <table class="timesheet" id="billing-table">
           <thead>
@@ -432,7 +432,7 @@
       </div>
       <div class="adhoc-divider">Ad-hoc client requests</div>
       <div class="custom-section">
-        <p class="hint">Client requests outside a project (tracked separately for invoicing). One row per ad-hoc project from Monday — describe the task and log the time in hours. Entries here are tagged <b>[Ad-hoc]</b> in the records. If a client request is missing here, ping your project lead so they add it on Monday.</p>
+        <p class="hint">Client requests outside a project (tracked separately for invoicing). One row per ad-hoc project from Monday — describe the task and log the time. Entries here are tagged <b>[Ad-hoc]</b> in the records. If a client request is missing here, ping your project lead so they add it on Monday.</p>
         <div class="custom-row-headers">
           <span>Project name</span>
           <span>Task / activity</span>
@@ -446,7 +446,7 @@
     </div>
     <div class="card">
       <h2>Non-billing time</h2>
-      <p class="hint">Any unlogged time in your week will automatically be recorded under "Autre". Values in hours.</p>
+      <p class="hint">Any unlogged time in your week will automatically be recorded under "Autre".</p>
       <table class="timesheet">
         <thead>
           <tr>
@@ -574,10 +574,9 @@
     { name: "[REGIE] TDB Financier Arma Groupe", type: "regie" },
     { name: "[REGIE] Nos Vies Notre Priorité (SNCF)", type: "regie" }
   ];
-  // Hours-based timesheet. Smallest unit = 0.5h (30 min). Target = 40h/week.
   const STEP = 0.5;
-  const TARGET = 40;          // hours per week
-  const HOURS_PER_DAY = 8;    // for the days display in the footer
+  const TARGET = 40;
+  const HOURS_PER_DAY = 8;
   const DRAFT_KEY_PREFIX = "ts_draft_";
   const AUTOFILL_LABEL = "Autre (auto)";
   let PROJECTS = [];
@@ -1090,7 +1089,7 @@
       grandEl.classList.add("total-ok");
       errMsg.textContent = "";
       submitBtn.disabled = false;
-    } else if (manual >= 32) {  // 4 days × 8h
+    } else if (manual >= 32) {
       manualEl.classList.add("total-warn");
       grandEl.classList.add("total-ok");
       errMsg.textContent = "";
@@ -1174,7 +1173,6 @@
     document.querySelectorAll('#billing-body input[data-kind="billing"]').forEach(inp => {
       const v = parseFloat(inp.value);
       if (!isNaN(v) && v > 0) {
-        // hours field — back-end stores both Hours (primary) and Days (= hours/8)
         entries.push({ category: "Billing", project: inp.dataset.project, taskOrActivity: inp.dataset.task, hours: v });
       }
     });
@@ -1236,14 +1234,17 @@
       });
     }
     (data.entries || []).forEach(en => {
-      // Drafts saved before the days→hours migration would have 'days' instead of 'hours'.
-      // Convert on the fly so old drafts don't show as empty.
+      // Drafts saved before the migration have 'days'. Convert to hours.
       const val = (typeof en.hours === 'number') ? en.hours
                 : (typeof en.days === 'number')  ? en.days * HOURS_PER_DAY
                 : 0;
       if (en.category === "Billing" && en.custom) {
         // Ad-hoc entry — find the matching pre-built row by project name.
+        // Strip [Ad-hoc] / [CUSTOM] prefix before matching.
         const projectName = (en.project || '').replace(/^\[(Ad-hoc|CUSTOM)\]\s*/i, '').trim();
+        // Try matching against the row's data attribute. The data attribute
+        // stores the original Monday name (which still has its own [Ad-hoc] prefix
+        // from MondaySync), so compare the cleaned versions on both sides.
         const candidateRows = document.querySelectorAll('#custom-rows .custom-row');
         let matched = null;
         candidateRows.forEach(row => {
@@ -1261,6 +1262,8 @@
           }
           if (hoursField) hoursField.value = val;
         }
+        // If no match (project removed from Monday since the draft was saved),
+        // silently drop the entry — there's no row to put it in anymore.
       } else if (en.category === "Billing") {
         const inp = document.querySelector(`input[data-kind="billing"][data-project="${cssEscape(en.project)}"][data-task="${cssEscape(en.taskOrActivity)}"]`);
         if (inp) inp.value = val;
@@ -1348,7 +1351,8 @@
     data.entries.forEach(en => {
       const isAutoRow = en.taskOrActivity && en.taskOrActivity.indexOf("(auto)") !== -1;
       const detail = en.project ? `${en.project} · ${en.taskOrActivity}` : en.taskOrActivity;
-      html += `<tr class="${isAutoRow ? 'auto' : ''}"><td>${en.category}</td><td>${detail}</td><td style="text-align:right">${formatNum(en.hours)}h</td></tr>`;
+      const enHours = (typeof en.hours === 'number') ? en.hours : (en.days || 0) * HOURS_PER_DAY;
+      html += `<tr class="${isAutoRow ? 'auto' : ''}"><td>${en.category}</td><td>${detail}</td><td style="text-align:right">${formatNum(enHours)}h</td></tr>`;
     });
     if (data.nextWfh) html += `<tr><td>WFH next week</td><td colspan="2">${data.nextWfh}</td></tr>`;
     if (data.nextLeave) html += `<tr><td>Leave next week</td><td colspan="2">${data.nextLeave}</td></tr>`;
