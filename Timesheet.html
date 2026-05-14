@@ -36,7 +36,7 @@
     font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--bg);
     color: var(--text);
-    padding: 0 0 140px 0;
+    padding: 0 0 160px 0;
     font-weight: 400;
     position: relative;
     overflow-x: hidden;
@@ -49,7 +49,6 @@
   .deco-top-left     { top: 200px;   left: -30px;   width: 130px; opacity: 0.55; }
   .wrap, .sticky-total, .confirm-screen { position: relative; z-index: 1; }
   .wrap { max-width: 1100px; margin: 0 auto; padding: 24px 16px; }
-
   header.top {
     background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
     color: white; padding: 32px 28px; border-radius: 16px;
@@ -62,11 +61,9 @@
   header.top .header-text h1 { margin: 0 0 6px 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }
   header.top .header-text p { margin: 0; font-size: 13px; line-height: 1.5; opacity: 0.85; font-weight: 300; }
   header.top .header-text b { color: var(--amber); font-weight: 600; }
-
   .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; margin-bottom: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
   .card h2 { margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: var(--navy); display: flex; align-items: center; gap: 10px; }
   .card h2::before { content: ''; display: inline-block; width: 4px; height: 18px; background: var(--amber); border-radius: 2px; }
-
   label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--navy); text-transform: uppercase; letter-spacing: 0.4px; }
   input[type="email"], input[type="text"], input[type="date"], input[type="number"], textarea {
     width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px;
@@ -75,7 +72,6 @@
   input[type="number"] { text-align: center; padding: 6px 4px; font-weight: 500; }
   input:focus, textarea:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(63, 166, 184, 0.15); }
   .row-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-
   table.timesheet { width: 100%; border-collapse: collapse; font-size: 13px; }
   table.timesheet thead th { background: var(--navy); color: white; padding: 10px 6px; font-weight: 600; text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
   table.timesheet thead th.first { text-align: left; padding-left: 14px; min-width: 240px; }
@@ -88,35 +84,28 @@
   table.timesheet input[type="number"]:focus { background: #FFFBEB; outline: 1px solid var(--teal); border-radius: 4px; }
   table.timesheet tr.has-entry td.label { background: #E0F2F4; border-left-color: var(--teal); }
   table.timesheet tr.has-entry td.label.regie { background: #FFF1D6; border-left-color: var(--amber); }
-
   table.timesheet tr.divider td { background: var(--navy-dark); color: white; padding: 8px 14px; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; text-align: center; }
-
   .checkbox-row { display: flex; gap: 10px; flex-wrap: wrap; }
   .checkbox-row label { display: flex; align-items: center; gap: 8px; background: var(--sub-bg); padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 500; text-transform: none; letter-spacing: 0; color: var(--navy); font-size: 13px; border: 1px solid transparent; transition: all 0.15s; }
   .checkbox-row label:hover { background: #DDEEF1; border-color: var(--teal); }
   .checkbox-row label.checked { background: var(--teal); color: white; border-color: var(--teal); }
   .checkbox-row input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: var(--amber); }
-
   .hint { font-size: 12px; color: var(--muted); font-style: italic; margin: 0 0 12px 0; }
-
   .sticky-total { position: fixed; bottom: 0; left: 0; right: 0; background: white; border-top: 3px solid var(--amber); box-shadow: 0 -6px 20px rgba(0,0,0,0.08); padding: 14px 24px; z-index: 100; }
   .sticky-total .inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr auto; align-items: center; gap: 24px; }
   .stat { display: flex; flex-direction: column; gap: 2px; }
   .stat .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
   .stat .val { font-size: 22px; font-weight: 700; color: var(--navy); }
+  .stat .sub { font-size: 11px; color: var(--muted); font-weight: 500; margin-top: 1px; }
   .total-ok { color: var(--green) !important; }
   .total-warn { color: var(--amber) !important; }
   .total-err { color: var(--red) !important; }
-
   button.submit-btn { background: var(--amber); color: var(--navy); border: 0; padding: 14px 32px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; text-transform: uppercase; letter-spacing: 0.8px; transition: all 0.15s; box-shadow: 0 2px 8px rgba(245, 166, 35, 0.3); }
   button.submit-btn:hover { background: #E5961F; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(245, 166, 35, 0.4); }
   button.submit-btn:disabled { background: #E5E7EB; color: #9CA3AF; cursor: not-allowed; box-shadow: none; transform: none; }
-
   .err-msg { color: var(--red); font-size: 12px; text-align: center; padding-top: 6px; min-height: 16px; font-weight: 500; }
   .warn-banner { background: var(--amber-soft); border-left: 4px solid var(--amber); padding: 10px 16px; border-radius: 6px; color: var(--navy); font-size: 13px; font-weight: 500; margin-bottom: 16px; }
-
   .draft-badge { display: inline-block; background: var(--amber-soft); color: var(--navy); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; margin-left: 12px; cursor: pointer; }
-
   .confirm-screen { display: none; background: white; border-radius: 16px; padding: 40px; margin: 24px auto; max-width: 800px; box-shadow: 0 8px 32px rgba(0,0,0,0.08); }
   .confirm-screen.active { display: block; }
   .confirm-screen .check { width: 72px; height: 72px; border-radius: 50%; background: var(--green-bg); color: var(--green); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 40px; font-weight: 700; }
@@ -131,11 +120,9 @@
   .confirm-screen button { padding: 12px 24px; border-radius: 10px; font-family: inherit; font-weight: 600; cursor: pointer; border: 0; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
   .confirm-screen .btn-primary { background: var(--amber); color: var(--navy); }
   .confirm-screen .btn-secondary { background: white; color: var(--navy); border: 2px solid var(--navy); }
-
   .loading-row td { text-align: center; padding: 40px; color: var(--muted); font-style: italic; }
   .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--teal); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
   /* AD-HOC CLIENT REQUESTS SECTION */
   .adhoc-divider {
     background: var(--navy-dark);
@@ -213,7 +200,6 @@
     color: var(--muted);
     font-style: italic;
   }
-
   /* DROPDOWN PANEL — shared by project, email, and task pickers */
   .project-dropdown {
     position: fixed;
@@ -311,7 +297,6 @@
     font-style: italic;
     text-align: center;
   }
-
   /* INLINE FAQ ACCORDION */
   .faq-card-intro {
     font-size: 12px;
@@ -377,7 +362,6 @@
     font-style: italic;
   }
   .faq-footer b { color: var(--navy); font-style: normal; }
-
   @media (max-width: 700px) {
     .deco { display: none; }
     header.top { flex-direction: column; text-align: center; padding: 24px 16px; }
@@ -400,24 +384,20 @@
 </style>
 </head>
 <body>
-
 <div id="main-app" class="wrap">
-
   <header class="top">
     <img src="./Datapilot_logo.png" alt="Datapilot" class="logo">
     <div class="header-text">
       <h1>Weekly Timesheet</h1>
       <p>
-        Submit every Friday for the full work week (Monday to Friday). Smallest unit: <b>0.0625 days = 30 min</b>
-        (0.125 = 1h, 0.25 = 2h, 0.5 = half day, 1 = full day). Standard week: <b>5 days</b>.
-        If less than 5, the gap auto-fills <b>Autre</b> (uncategorized). If more than 5, you'll see a warning but can still submit (overtime is recorded).
+        Submit every Friday for the full work week (Monday to Friday). Enter time in <b>hours</b>.
+        Smallest unit: <b>0.5h = 30 min</b>. Standard week: <b>40 hours</b> (5 days × 8h).
+        If less than 40h, the gap auto-fills <b>Autre</b> (uncategorized). If more than 40h, you'll see a warning but can still submit (overtime is recorded).
         Resubmit anytime, the latest submission overrides the previous one for the same week.
       </p>
     </div>
   </header>
-
   <form id="timesheet-form" autocomplete="off">
-
     <div class="card">
       <h2>Who & when <span id="draft-indicator" class="draft-badge" style="display:none">Draft saved · <span id="clear-draft-btn" style="text-decoration: underline">clear</span></span></h2>
       <div class="row-grid">
@@ -433,10 +413,9 @@
         </div>
       </div>
     </div>
-
     <div class="card">
       <h2>Billing time</h2>
-      <p class="hint">Sprints in blue, Régies in orange. Fill only the rows where you spent time.</p>
+      <p class="hint">Sprints in blue, Régies in orange. Fill only the rows where you spent time. Values in hours.</p>
       <div style="overflow-x: auto;">
         <table class="timesheet" id="billing-table">
           <thead>
@@ -451,15 +430,13 @@
           </tbody>
         </table>
       </div>
-
       <div class="adhoc-divider">Ad-hoc client requests</div>
-
       <div class="custom-section">
-        <p class="hint">Client requests outside a project (tracked separately for invoicing). One row per ad-hoc project from Monday — describe the task and log the time. Entries here are tagged <b>[Ad-hoc]</b> in the records. If a client request is missing here, ping your project lead so they add it on Monday.</p>
+        <p class="hint">Client requests outside a project (tracked separately for invoicing). One row per ad-hoc project from Monday — describe the task and log the time in hours. Entries here are tagged <b>[Ad-hoc]</b> in the records. If a client request is missing here, ping your project lead so they add it on Monday.</p>
         <div class="custom-row-headers">
           <span>Project name</span>
           <span>Task / activity</span>
-          <span style="text-align:center">Days</span>
+          <span style="text-align:center">Hours</span>
         </div>
         <div id="custom-rows">
           <div class="loading-row" id="adhoc-loading"><span class="spinner"></span>Loading ad-hoc projects from Monday…</div>
@@ -467,38 +444,35 @@
         </div>
       </div>
     </div>
-
     <div class="card">
       <h2>Non-billing time</h2>
-      <p class="hint">Any unlogged time in your week will automatically be recorded under "Autre".</p>
+      <p class="hint">Any unlogged time in your week will automatically be recorded under "Autre". Values in hours.</p>
       <table class="timesheet">
         <thead>
           <tr>
             <th class="first">Activity</th>
-            <th style="width: 120px;">Days</th>
+            <th style="width: 120px;">Hours</th>
           </tr>
         </thead>
         <tbody id="nonbilling-body"></tbody>
       </table>
     </div>
-
     <div class="card">
       <h2>Time off</h2>
+      <p class="hint">A full day = 8h, a half day = 4h.</p>
       <table class="timesheet">
         <thead>
           <tr>
             <th class="first">Type</th>
-            <th style="width: 120px;">Days</th>
+            <th style="width: 120px;">Hours</th>
           </tr>
         </thead>
         <tbody id="timeoff-body"></tbody>
       </table>
     </div>
-
     <div class="card">
       <h2>Heads-up for next week</h2>
-      <p class="hint">Help your team plan ahead. These don't count toward this week's 5 days.</p>
-
+      <p class="hint">Help your team plan ahead. These don't count toward this week's 40 hours.</p>
       <div style="margin-bottom: 18px">
         <label style="margin-bottom: 10px">Which day(s) do you plan to work from home next week?</label>
         <div class="checkbox-row" id="next-wfh-row">
@@ -509,7 +483,6 @@
           <label><input type="checkbox" name="nextWfh" value="Fri"> <span>Friday</span></label>
         </div>
       </div>
-
       <div>
         <label style="margin-bottom: 10px">Do you have planned leave next week?</label>
         <div class="checkbox-row" id="next-leave-row">
@@ -521,22 +494,18 @@
         </div>
       </div>
     </div>
-
     <div class="card">
       <h2>Comments (optional)</h2>
       <textarea id="comments" rows="2" placeholder="Anything to flag for this week?"></textarea>
     </div>
-
     <div class="card">
       <h2>Frequently asked questions</h2>
       <p class="faq-card-intro">Common questions about filling the timesheet. Click a question to expand the answer.</p>
       <div id="faq-content"><p class="hint">Loading FAQ…</p></div>
       <p class="faq-footer">Can't find your answer? <b>Reach out to your project lead.</b></p>
     </div>
-
   </form>
 </div>
-
 <div id="confirm-screen" class="confirm-screen">
   <div class="check" id="confirm-check">OK</div>
   <h2 id="confirm-title">Submitted!</h2>
@@ -547,29 +516,29 @@
     <button class="btn-primary" id="btn-new">Submit another week</button>
   </div>
 </div>
-
 <div class="sticky-total" id="sticky-footer">
   <div class="inner">
     <div class="stat">
       <span class="lbl">Manually entered</span>
-      <span class="val" id="manualTotal">0</span>
+      <span class="val" id="manualTotal">0h</span>
+      <span class="sub" id="manualTotalDays">0 days</span>
     </div>
     <div class="stat">
-      <span class="lbl">Autofilled time (Autre)</span>
-      <span class="val" id="autoFill">5</span>
+      <span class="lbl">Autofilled (Autre)</span>
+      <span class="val" id="autoFill">40h</span>
+      <span class="sub" id="autoFillDays">5 days</span>
     </div>
     <div class="stat">
       <span class="lbl">Grand total</span>
-      <span class="val" id="grandTotal">5 / 5</span>
+      <span class="val" id="grandTotal">40h / 40h</span>
+      <span class="sub" id="grandTotalDays">5 / 5 days</span>
     </div>
     <button type="submit" form="timesheet-form" class="submit-btn" id="submitBtn">Submit</button>
   </div>
   <div class="err-msg" id="errMsg"></div>
 </div>
-
 <script>
   const APPS_SCRIPT_URL = "https://script.google.com/a/macros/datapilot.fr/s/AKfycbyUhfW211pozOYRKOJBZM9vCcRLxDhmsm3OShM1F_1SV2HWaqpg253ekKdu75xZYiWR/exec";
-
   const TASK_TYPES = [
     "Développement",
     "Bugs / MàJ / Corrections",
@@ -579,7 +548,6 @@
     "Réunion client",
     "QC"
   ];
-
   const NON_BILLING = [
     { name: "Formations",          hint: "Weekly Training, Soft Skills..." },
     { name: "Production interne",  hint: "Dashboard interne, Documentation interne, training intern..." },
@@ -592,7 +560,6 @@
     { name: "Sick",           hint: "" },
     { name: "Public holiday", hint: "" }
   ];
-
   const FALLBACK_PROJECTS = [
     { name: "[SPRINT] Forward (ST2)", type: "sprint" },
     { name: "[SPRINT] MàJ C-Care HR Dashboard", type: "sprint" },
@@ -607,20 +574,18 @@
     { name: "[REGIE] TDB Financier Arma Groupe", type: "regie" },
     { name: "[REGIE] Nos Vies Notre Priorité (SNCF)", type: "regie" }
   ];
-
-  const STEP = 0.0625;
-  const TARGET = 5;
+  // Hours-based timesheet. Smallest unit = 0.5h (30 min). Target = 40h/week.
+  const STEP = 0.5;
+  const TARGET = 40;          // hours per week
+  const HOURS_PER_DAY = 8;    // for the days display in the footer
   const DRAFT_KEY_PREFIX = "ts_draft_";
   const AUTOFILL_LABEL = "Autre (auto)";
-
   let PROJECTS = [];
   let ALL_PROJECTS = [];
   let TEAM_EMAILS = [];
   let FAQ_ITEMS = [];     // flat array of {question, answer}
-
   const params = new URLSearchParams(window.location.search);
   if (params.get("email")) document.getElementById("email").value = params.get("email");
-
   function getCurrentMondayIso() {
     const today = new Date();
     const day = today.getDay();
@@ -631,7 +596,6 @@
   }
   const weekInput = document.getElementById("weekStart");
   weekInput.value = getCurrentMondayIso();
-
   weekInput.addEventListener("change", () => {
     const d = new Date(weekInput.value + "T00:00:00");
     if (d.getDay() !== 1) {
@@ -644,7 +608,6 @@
       document.getElementById("weekErr").textContent = "";
     }
   });
-
   async function loadProjects() {
     if (APPS_SCRIPT_URL.startsWith("PASTE")) {
       PROJECTS = FALLBACK_PROJECTS;
@@ -663,7 +626,6 @@
       const allData = await allResp.json();
       const usersData = await usersResp.json();
       const faqData = await faqResp.json();
-
       PROJECTS = (activeData.ok && Array.isArray(activeData.projects) && activeData.projects.length > 0)
         ? activeData.projects : FALLBACK_PROJECTS;
       ALL_PROJECTS = (allData.ok && Array.isArray(allData.projects) && allData.projects.length > 0)
@@ -681,7 +643,6 @@
     buildBilling();
     populateFaqInline();
   }
-
   // ============================================================
   // SHARED DROPDOWN COMPONENT — projects, emails, and ad-hoc tasks
   // dataMode: 'projects' | 'emails' | 'tasks'
@@ -695,7 +656,6 @@
     visibleItems: [],
     dataMode: 'projects'
   };
-
   function ensureDropdownPanel() {
     if (dropdownState.panel) return dropdownState.panel;
     const panel = document.createElement('div');
@@ -703,7 +663,6 @@
     panel.style.display = 'none';
     panel.innerHTML = `<div class="project-dropdown-list" role="listbox"></div>`;
     document.body.appendChild(panel);
-
     document.addEventListener('mousedown', (e) => {
       if (panel.style.display === 'none') return;
       if (panel.contains(e.target)) return;
@@ -717,7 +676,6 @@
     dropdownState.panel = panel;
     return panel;
   }
-
   function openDropdown(input, mode) {
     const panel = ensureDropdownPanel();
     dropdownState.input = input;
@@ -728,13 +686,11 @@
     renderDropdown(input.value || '');
     panel.style.display = 'block';
   }
-
   function closeDropdown() {
     if (dropdownState.panel) dropdownState.panel.style.display = 'none';
     dropdownState.input = null;
     dropdownState.keyIndex = -1;
   }
-
   function positionDropdown() {
     if (!dropdownState.input || !dropdownState.panel) return;
     const rect = dropdownState.input.getBoundingClientRect();
@@ -744,7 +700,6 @@
     panel.style.left = rect.left + 'px';
     panel.style.width = Math.max(rect.width, 320) + 'px';
   }
-
   function renderDropdown(filter) {
     if (dropdownState.dataMode === 'emails') {
       renderEmailDropdown(filter);
@@ -752,17 +707,13 @@
       renderProjectDropdown(filter);
     }
   }
-
   function renderEmailDropdown(filter) {
     const panel = dropdownState.panel;
     const list = panel.querySelector('.project-dropdown-list');
     list.innerHTML = '';
     const term = (filter || '').toLowerCase().trim();
-
     const matches = TEAM_EMAILS.filter(e => !term || e.indexOf(term) !== -1);
-
     dropdownState.visibleItems = [];
-
     if (TEAM_EMAILS.length === 0) {
       const empty = document.createElement('div');
       empty.className = 'project-dropdown-empty';
@@ -779,14 +730,12 @@
       list.appendChild(empty);
       return;
     }
-
     const header = document.createElement('div');
     header.className = 'project-dropdown-header';
     header.textContent = `Team (${matches.length})`;
     list.appendChild(header);
     matches.forEach(email => list.appendChild(buildEmailItem(email, term)));
   }
-
   function buildEmailItem(email, term) {
     const item = document.createElement('div');
     item.className = 'project-dropdown-item';
@@ -807,15 +756,12 @@
     dropdownState.visibleItems.push(item);
     return item;
   }
-
   function renderProjectDropdown(filter) {
     const panel = dropdownState.panel;
     const list = panel.querySelector('.project-dropdown-list');
     list.innerHTML = '';
     const term = (filter || '').toLowerCase().trim();
-
     const matches = (p) => !term || p.name.toLowerCase().indexOf(term) !== -1;
-
     // Sort: ad-hoc first (alphabetical), then sprint+regie alphabetical
     const sortFn = (a, b) => {
       const aAdhoc = a.type === 'adhoc';
@@ -824,12 +770,9 @@
       if (bAdhoc && !aAdhoc) return 1;
       return a.name.localeCompare(b.name);
     };
-
     const active = ALL_PROJECTS.filter(p => p.active !== false && matches(p)).sort(sortFn);
     const inactive = ALL_PROJECTS.filter(p => p.active === false && matches(p)).sort(sortFn);
-
     dropdownState.visibleItems = [];
-
     if (active.length === 0 && inactive.length === 0) {
       const empty = document.createElement('div');
       empty.className = 'project-dropdown-empty';
@@ -839,7 +782,6 @@
       list.appendChild(empty);
       return;
     }
-
     if (active.length > 0) {
       const header = document.createElement('div');
       header.className = 'project-dropdown-header';
@@ -847,7 +789,6 @@
       list.appendChild(header);
       active.forEach(p => list.appendChild(buildProjectItem(p, term)));
     }
-
     if (inactive.length > 0) {
       const sectionHeader = document.createElement('div');
       sectionHeader.className = 'project-dropdown-header collapsible' + (dropdownState.inactiveExpanded ? ' expanded' : '');
@@ -862,32 +803,27 @@
       }
     }
   }
-
   function buildProjectItem(p, term) {
     const item = document.createElement('div');
     item.className = 'project-dropdown-item';
     if (p.active === false) item.classList.add('is-inactive');
     item.dataset.projectName = p.name;
-
     const dot = document.createElement('span');
     let dotClass = 'dot-sprint';
     if (p.type === 'regie') dotClass = 'dot-regie';
     else if (p.type === 'adhoc') dotClass = 'dot-adhoc';
     dot.className = 'project-dot ' + dotClass;
     item.appendChild(dot);
-
     const text = document.createElement('span');
     text.className = 'project-text';
     text.innerHTML = highlightMatch(p.name, term);
     item.appendChild(text);
-
     if (p.active === false) {
       const badge = document.createElement('span');
       badge.className = 'inactive-badge';
       badge.textContent = 'inactive';
       item.appendChild(badge);
     }
-
     item.addEventListener('mousedown', (e) => {
       e.preventDefault();
       if (dropdownState.input) {
@@ -899,7 +835,6 @@
     dropdownState.visibleItems.push(item);
     return item;
   }
-
   function highlightMatch(text, term) {
     if (!term) return escapeForHtml(text);
     const lower = text.toLowerCase();
@@ -909,16 +844,13 @@
       '<mark>' + escapeForHtml(text.slice(idx, idx + term.length)) + '</mark>' +
       escapeForHtml(text.slice(idx + term.length));
   }
-
   function escapeForHtml(s) {
     return String(s).replace(/[&<>"]/g, ch => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[ch]));
   }
-
   function handleDropdownKeyboardNav(e) {
     if (!dropdownState.panel || dropdownState.panel.style.display === 'none') return;
     const items = dropdownState.visibleItems;
     if (items.length === 0) return;
-
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       dropdownState.keyIndex = (dropdownState.keyIndex + 1) % items.length;
@@ -934,7 +866,6 @@
       }
     }
   }
-
   function updateActiveItem() {
     dropdownState.visibleItems.forEach((it, i) => {
       it.classList.toggle('keyboard-active', i === dropdownState.keyIndex);
@@ -943,14 +874,12 @@
       }
     });
   }
-
   window.addEventListener('scroll', () => {
     if (dropdownState.panel && dropdownState.panel.style.display !== 'none') positionDropdown();
   }, true);
   window.addEventListener('resize', () => {
     if (dropdownState.panel && dropdownState.panel.style.display !== 'none') positionDropdown();
   });
-
   // Wire the email field
   const emailInput = document.getElementById("email");
   emailInput.addEventListener('focus', () => openDropdown(emailInput, 'emails'));
@@ -964,11 +893,9 @@
   emailInput.addEventListener('keydown', (e) => {
     if (dropdownState.input === emailInput) handleDropdownKeyboardNav(e);
   });
-
   function buildBilling() {
     const tbody = document.getElementById("billing-body");
     tbody.innerHTML = "";
-
     const head = document.querySelector("#billing-table thead tr");
     head.innerHTML = '<th class="first">Project</th>' +
       TASK_TYPES.map(t => {
@@ -976,10 +903,8 @@
         return `<th title="${t}">${short}</th>`;
       }).join('') +
       '<th>Total</th>';
-
     const sprints = PROJECTS.filter(p => p.type === "sprint");
     const regies = PROJECTS.filter(p => p.type === "regie");
-
     if (sprints.length > 0) {
       const dividerSprint = document.createElement("tr");
       dividerSprint.className = "divider";
@@ -994,12 +919,10 @@
       tbody.appendChild(dividerRegie);
       regies.forEach((p, i) => addProjectRow(tbody, p, "regie-" + i));
     }
-
     buildAdHocRows();
     restoreDraft();
     recalc();
   }
-
   function addProjectRow(tbody, project, rowId) {
     const tr = document.createElement("tr");
     tr.dataset.rowid = rowId;
@@ -1027,7 +950,6 @@
     tr.appendChild(totalTd);
     tbody.appendChild(tr);
   }
-
   function buildSimpleList(containerId, items, kind) {
     const tbody = document.getElementById(containerId);
     items.forEach(item => {
@@ -1056,11 +978,9 @@
       tbody.appendChild(tr);
     });
   }
-
   buildSimpleList("nonbilling-body", NON_BILLING, "nonbilling");
   buildSimpleList("timeoff-body", TIME_OFF, "timeoff");
   loadProjects();
-
   // ============================================================
   // AD-HOC SECTION — pre-populated rows, one per ad-hoc project from Monday
   // No "+ Add task" button — list is driven entirely by Monday.
@@ -1068,14 +988,11 @@
   // No free-typing of new projects — must be added on Monday first.
   // ============================================================
   let adhocRowSeq = 0;
-
   function buildAdHocRows() {
     const container = document.getElementById("custom-rows");
     container.innerHTML = "";  // remove loading row
-
     const adhocs = ALL_PROJECTS.filter(p => p.type === "adhoc" && p.active !== false);
     adhocs.sort((a, b) => a.name.localeCompare(b.name));
-
     if (adhocs.length === 0) {
       const empty = document.createElement("div");
       empty.className = "adhoc-empty";
@@ -1083,10 +1000,8 @@
       container.appendChild(empty);
       return;
     }
-
     adhocs.forEach(project => addAdHocRow(project));
   }
-
   function addAdHocRow(project) {
     adhocRowSeq++;
     const id = "adhoc-" + adhocRowSeq;
@@ -1094,12 +1009,10 @@
     wrap.className = "custom-row";
     wrap.dataset.rowid = id;
     wrap.dataset.projectName = project.name;
-
     const label = document.createElement("div");
     label.className = "project-label";
     label.textContent = project.name;
     wrap.appendChild(label);
-
     const taskField = document.createElement("textarea");
     taskField.dataset.kind = "custom-task";
     taskField.placeholder = "Describe the request...";
@@ -1110,33 +1023,27 @@
       onChange();
     });
     wrap.appendChild(taskField);
-
-    const daysField = document.createElement("input");
-    daysField.type = "number";
-    daysField.dataset.kind = "custom-days";
-    daysField.min = "0";
-    daysField.step = STEP;
-    daysField.placeholder = "0";
-    daysField.addEventListener("input", onChange);
-    wrap.appendChild(daysField);
-
+    const hoursField = document.createElement("input");
+    hoursField.type = "number";
+    hoursField.dataset.kind = "custom-hours";
+    hoursField.min = "0";
+    hoursField.step = STEP;
+    hoursField.placeholder = "0";
+    hoursField.addEventListener("input", onChange);
+    wrap.appendChild(hoursField);
     document.getElementById("custom-rows").appendChild(wrap);
   }
-
   function autoGrowTextarea(el) {
     el.style.height = "auto";
     el.style.height = (el.scrollHeight + 2) + "px";
   }
-
   document.querySelectorAll('.checkbox-row input[type="checkbox"]').forEach(cb => {
     cb.addEventListener("change", () => {
       cb.parentElement.classList.toggle("checked", cb.checked);
       saveDraft();
     });
   });
-
   function onChange() { recalc(); saveDraft(); }
-
   function recalc() {
     let manual = 0;
     document.querySelectorAll("#billing-body tr[data-rowid]").forEach(tr => {
@@ -1155,36 +1062,35 @@
       if (!isNaN(v)) manual += v;
     });
     document.querySelectorAll('#custom-rows .custom-row').forEach(row => {
-      const inp = row.querySelector('input[data-kind="custom-days"]');
+      const inp = row.querySelector('input[data-kind="custom-hours"]');
       const v = inp ? parseFloat(inp.value) : NaN;
       if (!isNaN(v)) manual += v;
       row.classList.toggle("has-entry", !isNaN(v) && v > 0);
     });
     const auto = Math.max(0, TARGET - manual);
     const grand = manual + auto;
-
-    document.getElementById("manualTotal").textContent = formatNum(manual);
-    document.getElementById("autoFill").textContent = formatNum(auto);
-    document.getElementById("grandTotal").textContent = formatNum(grand) + " / " + TARGET;
-
+    document.getElementById("manualTotal").textContent = formatNum(manual) + "h";
+    document.getElementById("manualTotalDays").textContent = formatNum(manual / HOURS_PER_DAY) + " days";
+    document.getElementById("autoFill").textContent = formatNum(auto) + "h";
+    document.getElementById("autoFillDays").textContent = formatNum(auto / HOURS_PER_DAY) + " days";
+    document.getElementById("grandTotal").textContent = formatNum(grand) + "h / " + TARGET + "h";
+    document.getElementById("grandTotalDays").textContent = formatNum(grand / HOURS_PER_DAY) + " / " + (TARGET / HOURS_PER_DAY) + " days";
     const manualEl = document.getElementById("manualTotal");
     const grandEl = document.getElementById("grandTotal");
     [manualEl, grandEl].forEach(el => el.classList.remove("total-ok", "total-warn", "total-err"));
-
     const submitBtn = document.getElementById("submitBtn");
     const errMsg = document.getElementById("errMsg");
-
-    if (manual > TARGET + 0.0001) {
+    if (manual > TARGET + 0.001) {
       manualEl.classList.add("total-err");
       grandEl.classList.add("total-err");
-      errMsg.textContent = `Total of ${formatNum(manual)} days exceeds the standard 5. Submitting will record this as overtime.`;
+      errMsg.textContent = `Total of ${formatNum(manual)}h exceeds the standard 40h. Submitting will record this as overtime.`;
       submitBtn.disabled = false;
-    } else if (Math.abs(manual - TARGET) < 0.0001) {
+    } else if (Math.abs(manual - TARGET) < 0.001) {
       manualEl.classList.add("total-ok");
       grandEl.classList.add("total-ok");
       errMsg.textContent = "";
       submitBtn.disabled = false;
-    } else if (manual >= 4) {
+    } else if (manual >= 32) {  // 4 days × 8h
       manualEl.classList.add("total-warn");
       grandEl.classList.add("total-ok");
       errMsg.textContent = "";
@@ -1196,12 +1102,10 @@
       submitBtn.disabled = false;
     }
   }
-
   function formatNum(n) {
     if (n === 0) return "0";
-    return parseFloat(n.toFixed(4)).toString();
+    return parseFloat(n.toFixed(2)).toString();
   }
-
   function draftKey() {
     const email = document.getElementById("email").value || "anon";
     const week = document.getElementById("weekStart").value || "noweek";
@@ -1246,10 +1150,8 @@
       recalc();
     }
   });
-
   document.getElementById("email").addEventListener("change", restoreDraft);
   document.getElementById("weekStart").addEventListener("change", restoreDraft);
-
   const emailErr = document.getElementById("emailErr");
   function validateEmail() {
     const v = emailInput.value.trim();
@@ -1267,25 +1169,25 @@
   emailInput.addEventListener("input", () => {
     if (emailErr.textContent) validateEmail();
   });
-
   function collectFormData() {
     const entries = [];
     document.querySelectorAll('#billing-body input[data-kind="billing"]').forEach(inp => {
       const v = parseFloat(inp.value);
       if (!isNaN(v) && v > 0) {
-        entries.push({ category: "Billing", project: inp.dataset.project, taskOrActivity: inp.dataset.task, days: v });
+        // hours field — back-end stores both Hours (primary) and Days (= hours/8)
+        entries.push({ category: "Billing", project: inp.dataset.project, taskOrActivity: inp.dataset.task, hours: v });
       }
     });
     document.querySelectorAll('input[data-kind="nonbilling"]').forEach(inp => {
       const v = parseFloat(inp.value);
       if (!isNaN(v) && v > 0) {
-        entries.push({ category: "Non-billing", project: "", taskOrActivity: inp.dataset.activity, days: v });
+        entries.push({ category: "Non-billing", project: "", taskOrActivity: inp.dataset.activity, hours: v });
       }
     });
     document.querySelectorAll('input[data-kind="timeoff"]').forEach(inp => {
       const v = parseFloat(inp.value);
       if (!isNaN(v) && v > 0) {
-        entries.push({ category: "Off", project: "", taskOrActivity: inp.dataset.activity, days: v });
+        entries.push({ category: "Off", project: "", taskOrActivity: inp.dataset.activity, hours: v });
       }
     });
     document.querySelectorAll('#custom-rows .custom-row').forEach(row => {
@@ -1294,8 +1196,8 @@
       const projectName = (row.dataset.projectName || '').trim();
       const taskField = row.querySelector('textarea[data-kind="custom-task"]');
       const taskName = (taskField ? taskField.value : '').trim();
-      const days = parseFloat(row.querySelector('input[data-kind="custom-days"]').value);
-      if (isNaN(days) || days <= 0) return;
+      const hours = parseFloat(row.querySelector('input[data-kind="custom-hours"]').value);
+      if (isNaN(hours) || hours <= 0) return;
       if (!projectName) return;
       // Strip any existing prefix and replace with [Ad-hoc]
       const cleaned = projectName.replace(/^\[(SPRINT|REGIE|Ad-hoc|CUSTOM)\]\s*/i, '');
@@ -1304,7 +1206,7 @@
         category: "Billing",
         project: storedProject,
         taskOrActivity: taskName || "(unspecified)",
-        days: days,
+        hours: hours,
         custom: true
       });
     });
@@ -1319,7 +1221,6 @@
       entries
     };
   }
-
   function applyFormData(data) {
     if (data.comments) document.getElementById("comments").value = data.comments;
     if (data.nextWfh) {
@@ -1335,13 +1236,14 @@
       });
     }
     (data.entries || []).forEach(en => {
+      // Drafts saved before the days→hours migration would have 'days' instead of 'hours'.
+      // Convert on the fly so old drafts don't show as empty.
+      const val = (typeof en.hours === 'number') ? en.hours
+                : (typeof en.days === 'number')  ? en.days * HOURS_PER_DAY
+                : 0;
       if (en.category === "Billing" && en.custom) {
         // Ad-hoc entry — find the matching pre-built row by project name.
-        // Strip [Ad-hoc] / [CUSTOM] prefix before matching.
         const projectName = (en.project || '').replace(/^\[(Ad-hoc|CUSTOM)\]\s*/i, '').trim();
-        // Try matching against the row's data attribute. The data attribute
-        // stores the original Monday name (which still has its own [Ad-hoc] prefix
-        // from MondaySync), so compare the cleaned versions on both sides.
         const candidateRows = document.querySelectorAll('#custom-rows .custom-row');
         let matched = null;
         candidateRows.forEach(row => {
@@ -1352,68 +1254,58 @@
         });
         if (matched) {
           const taskField = matched.querySelector('textarea[data-kind="custom-task"]');
-          const daysField = matched.querySelector('input[data-kind="custom-days"]');
+          const hoursField = matched.querySelector('input[data-kind="custom-hours"]');
           if (taskField && en.taskOrActivity && en.taskOrActivity !== '(unspecified)') {
             taskField.value = en.taskOrActivity;
             autoGrowTextarea(taskField);
           }
-          if (daysField) daysField.value = en.days;
+          if (hoursField) hoursField.value = val;
         }
-        // If no match (project removed from Monday since the draft was saved),
-        // silently drop the entry — there's no row to put it in anymore.
       } else if (en.category === "Billing") {
         const inp = document.querySelector(`input[data-kind="billing"][data-project="${cssEscape(en.project)}"][data-task="${cssEscape(en.taskOrActivity)}"]`);
-        if (inp) inp.value = en.days;
+        if (inp) inp.value = val;
       } else if (en.category === "Non-billing") {
         const inp = document.querySelector(`input[data-kind="nonbilling"][data-activity="${cssEscape(en.taskOrActivity)}"]`);
-        if (inp) inp.value = en.days;
+        if (inp) inp.value = val;
       } else if (en.category === "Off") {
         const inp = document.querySelector(`input[data-kind="timeoff"][data-activity="${cssEscape(en.taskOrActivity)}"]`);
-        if (inp) inp.value = en.days;
+        if (inp) inp.value = val;
       }
     });
     recalc();
   }
   function cssEscape(s) { return String(s).replace(/(["\\])/g, '\\$1'); }
-
   document.getElementById("timesheet-form").addEventListener("submit", async (e) => {
     e.preventDefault();
     const submitBtn = document.getElementById("submitBtn");
     const errMsg = document.getElementById("errMsg");
-
     if (!validateEmail()) {
       emailInput.focus();
       errMsg.textContent = "Please use a valid @datapilot.fr email address.";
       return;
     }
-
     const data = collectFormData();
-    const manual = data.entries.reduce((a, b) => a + b.days, 0);
-
+    const manual = data.entries.reduce((a, b) => a + b.hours, 0);
     if (manual === 0) {
-      if (!confirm("You haven't logged any time. Submitting will record 5 days as Autre (uncategorized). Continue?")) {
+      if (!confirm("You haven't logged any time. Submitting will record 40 hours as Autre (uncategorized). Continue?")) {
         return;
       }
     }
-
-    if (manual > 5.0001) {
-      const over = manual - 5;
-      if (!confirm(`This timesheet totals ${formatNum(manual)} days, which is ${formatNum(over)} day(s) above the standard 5-day week. The extra time will be recorded as overtime. Confirm submission?`)) {
+    if (manual > TARGET + 0.001) {
+      const over = manual - TARGET;
+      if (!confirm(`This timesheet totals ${formatNum(manual)} hours, which is ${formatNum(over)} hour(s) above the standard 40h week. The extra time will be recorded as overtime. Confirm submission?`)) {
         return;
       }
     }
-
     const auto = Math.max(0, TARGET - manual);
     if (auto > 0) {
-      data.entries.push({ category: "Non-billing", project: "", taskOrActivity: AUTOFILL_LABEL, days: auto });
+      data.entries.push({ category: "Non-billing", project: "", taskOrActivity: AUTOFILL_LABEL, hours: auto });
     }
     data.manualTotal = manual;
     data.autoFill = auto;
     data.submittedAt = new Date().toISOString();
-
     submitBtn.disabled = true;
     submitBtn.textContent = "Submitting…";
-
     try {
       await fetch(APPS_SCRIPT_URL, {
         method: "POST",
@@ -1430,14 +1322,12 @@
       submitBtn.disabled = false;
     }
   });
-
   function showConfirmation(data, isError, errText) {
     document.getElementById("main-app").style.display = "none";
     document.getElementById("sticky-footer").style.display = "none";
     const screen = document.getElementById("confirm-screen");
     screen.classList.add("active");
     screen.classList.toggle("error", !!isError);
-
     document.getElementById("confirm-check").textContent = isError ? "!" : "OK";
     if (isError) {
       document.getElementById("confirm-title").textContent = "Submission failed";
@@ -1450,22 +1340,21 @@
         : isAuto
           ? "Submitted with auto-balance"
           : "Timesheet submitted";
-      document.getElementById("confirm-sub").textContent = `Week of ${data.weekStart}: ${formatNum(data.manualTotal + data.autoFill)} day(s) total. Recap email on its way.`;
+      const totalH = data.manualTotal + data.autoFill;
+      document.getElementById("confirm-sub").textContent = `Week of ${data.weekStart}: ${formatNum(totalH)} hours total (${formatNum(totalH / HOURS_PER_DAY)} days). Recap email on its way.`;
     }
-
     const tbl = document.getElementById("confirm-summary");
-    let html = '<thead><tr><th>Category</th><th>Project / Activity</th><th style="text-align:right">Days</th></tr></thead><tbody>';
+    let html = '<thead><tr><th>Category</th><th>Project / Activity</th><th style="text-align:right">Hours</th></tr></thead><tbody>';
     data.entries.forEach(en => {
       const isAutoRow = en.taskOrActivity && en.taskOrActivity.indexOf("(auto)") !== -1;
       const detail = en.project ? `${en.project} · ${en.taskOrActivity}` : en.taskOrActivity;
-      html += `<tr class="${isAutoRow ? 'auto' : ''}"><td>${en.category}</td><td>${detail}</td><td style="text-align:right">${formatNum(en.days)}</td></tr>`;
+      html += `<tr class="${isAutoRow ? 'auto' : ''}"><td>${en.category}</td><td>${detail}</td><td style="text-align:right">${formatNum(en.hours)}h</td></tr>`;
     });
     if (data.nextWfh) html += `<tr><td>WFH next week</td><td colspan="2">${data.nextWfh}</td></tr>`;
     if (data.nextLeave) html += `<tr><td>Leave next week</td><td colspan="2">${data.nextLeave}</td></tr>`;
     html += '</tbody>';
     tbl.innerHTML = html;
   }
-
   document.getElementById("btn-edit").addEventListener("click", () => {
     document.getElementById("confirm-screen").classList.remove("active");
     document.getElementById("main-app").style.display = "";
@@ -1474,7 +1363,6 @@
   document.getElementById("btn-new").addEventListener("click", () => {
     location.reload();
   });
-
   // ============================================================
   // INLINE FAQ ACCORDION
   // ============================================================
